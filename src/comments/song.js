@@ -1,4 +1,4 @@
-const musicAPI = require("music-api-next")
+const musicAPI = require("../../service")
 const utils = require('../../utils')
 const globalConfig = require('./config')
 

@@ -4,7 +4,10 @@
   },
   "dependencies": {
     "chalk": "^4.0.0",
+    "crypto-js": "^4.0.0",
+    "moment": "^2.26.0",
     "mongodb": "^3.5.8",
-    "music-api-next": "^1.0.0"
+    "querystring": "^0.2.0",
+    "request": "^2.88.2"
   }
 }
