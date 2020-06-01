@@ -1,5 +1,9 @@
 {
+  "scripts": {
+    "comments-original-songs": "nodemon .//projects//comments//original-songs//index.js"
+  },
   "dependencies": {
+    "chalk": "^4.0.0",
     "mongodb": "^3.5.8",
     "music-api-next": "^1.0.0"
   }
