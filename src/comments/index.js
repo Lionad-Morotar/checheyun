@@ -1,4 +1,5 @@
 const globalConfig = require('./config')
+const logger = require('../logger')
 
 module.exports = function crawler(arg) {
     /* 参数合并 */
@@ -7,7 +8,8 @@ module.exports = function crawler(arg) {
         unCrawList: [],
         crawingList: [],
         force: false,
-        valid: val => false,
+        valid: _ => false,
+        logger,
     }
     if (arg instanceof Array) {
         config.list = arg
@@ -88,7 +90,10 @@ module.exports = function crawler(arg) {
                 }
                 task.checkStop(!crawNext)
 
-                setTimeout(() => task.run(), 300)
+                setTimeout(() => {
+                    logger.log()
+                    task.run()
+                }, 300)
             }
         }
         task.run()

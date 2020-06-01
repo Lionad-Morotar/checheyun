@@ -8,7 +8,7 @@ function startSongCrawler({
     callback
 }) {
     let curPage = 1
-    const { collection, force } = _config
+    const { collection, logger, force } = _config
     const { id } = utils.parseURL(url)
     const ID = {
         _id: id,
@@ -34,21 +34,33 @@ function startSongCrawler({
                 musicAPI
                     .getComment({
                         ...globalConfig.searchConfig,
-                        id: "1399646264",
+                        id,
                         page: curPage++,
                     })
                     .then(({results: comments}) => {
                         commentsCon.push(...comments)
-                        comments.length !== 0
-                            ? task.continue()
-                            : task.stop()
+                        if (comments.length !== 0) {
+                            logger.store(id, {
+                                type: 'comment',
+                                id,
+                                page: curPage - 1,
+                                count: commentsCon.length
+                            })
+                            task.continue()
+                        } else {
+                            logger.update(id, {
+                                id,
+                                status: 'success',
+                                callback: stores => delete stores[id]
+                            })
+                            task.stop()
+                        }
                     })
                     .catch(error => {
                         throw error
                     })
             },
             continue() {
-                console.log(curPage - 1, commentsCon.length)
                 setTimeout(() => task.run(), globalConfig.perPageInterval)
             },
             stop() {
