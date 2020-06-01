@@ -14,13 +14,14 @@ class Music {
     return comment.replace(rule, "")
   }
   getComment(querys) {
-    const { id, page, limit } = querys
+    const { id, page, limit, lastTime } = querys
     let url = "https://music.163.com/weapi/v1/resource/comments/R_SO_4_" + id
     let form = {
       rid: "R_SO_4_" + id,
       offset: limit * (page - 1),
       total: true,
       limit,
+      beforeTime: lastTime || 0,
       csrf_token: ""
     }
     let { encText, encSecKey } = asrsea(
@@ -46,6 +47,7 @@ class Music {
             success: true,
             results: data.comments.map(item => {
               return {
+                _time: item.time,
                 time: moment(item.time).format("YYYY-MM-DD H:mm:ss"),
                 content: this.filterComment(item.content),
                 user: {

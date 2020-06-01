@@ -7,7 +7,7 @@ function startSongCrawler({
     url,
     callback
 }) {
-    let curPage = 50
+    let curPage = 1
     const { collection, logger, force } = _config
     const { id } = utils.parseURL(url)
     const ID = {
@@ -36,6 +36,7 @@ function startSongCrawler({
                         ...globalConfig.searchConfig,
                         id,
                         page: curPage++,
+                        lastTime: commentsCon.length === 0 ? 0 : commentsCon[commentsCon.length - 1]._time
                     })
                     .then(({results: comments}) => {
                         commentsCon.push(...comments)
