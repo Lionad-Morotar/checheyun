@@ -7,7 +7,7 @@ function startSongCrawler({
     url,
     callback
 }) {
-    let curPage = 1
+    let curPage = 50
     const { collection, logger, force } = _config
     const { id } = utils.parseURL(url)
     const ID = {

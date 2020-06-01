@@ -8,6 +8,7 @@ const maxConcurrenceCount = 5
 const perPageInterval = 2000
 
 module.exports = {
+    validCrawType,
     isValidCrawType: type => validCrawType.includes(type),
     maxConcurrenceCount,
     perPageInterval,

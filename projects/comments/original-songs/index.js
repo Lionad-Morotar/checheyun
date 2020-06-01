@@ -3,13 +3,12 @@ const crawler = require('../../../src/comments')
 
 MongoClient.connect("mongodb://localhost:27017", { useNewUrlParser: true, useUnifiedTopology: true }, function(err, mongo) {
     if (err) throw err
-    const db = mongo.db("comments")
-    const collection = db.collection('origin-song')
+    const db = mongo.db("评论")
+    const collection = db.collection('原曲')
 
     const list = [
-        {
-            url: 'https://music.163.com/#/song?id=1399646264'
-        }
+        // 'https://music.163.com/#/song?id=1399646264',
+        'https://music.163.com/#/song?id=1436709403'
     ]
 
     crawler({ 
@@ -19,11 +18,11 @@ MongoClient.connect("mongodb://localhost:27017", { useNewUrlParser: true, useUni
     })
         .then(() => {
             console.log('task done !')
-            // db.close()
+            mongo.close()
         })
         .catch(error => {
             console.error('task error : ', error.message)
-            // db.close()
+            mongo.close()
         })
 })
 

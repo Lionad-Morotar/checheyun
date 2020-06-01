@@ -1,5 +1,6 @@
 const globalConfig = require('./config')
 const logger = require('../logger')
+const utils = require('../../utils')
 
 module.exports = function crawler(arg) {
     /* 参数合并 */
@@ -21,13 +22,14 @@ module.exports = function crawler(arg) {
     }
 
     /* 清洗待抓取列表 */
-    config.list.map(item => {
-        const { type = 'song', url } = item
+    config.list.map(x => {
+        const item = x instanceof Object ? x : { url: x  }
+        const { type = utils.judgeURLType(item.url), url } = item
         if (!url) {
             throw new TypeError('Param url should be String')
         }
         if (!globalConfig.isValidCrawType(type)) {
-            throw new TypeError('Param type should be valid Enums : ', globalConfig.validCrawType)
+            throw new TypeError('Param type should be valid Enums : ' + String(globalConfig.validCrawType))
         }
 
         const shouldSkip = config.valid({ type, url })

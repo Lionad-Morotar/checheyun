@@ -21,11 +21,16 @@ module.exports = {
 
             switch(x.type) {
                 case 'comment':
+                    const statusColorMap = {
+                        success: 'green'
+                    }
+                    const statusText = x.status && statusColorMap[x.status] && chalk[statusColorMap[x.status]](x.status)
+
                     console.log(
-                        `[${chalk.cyan(x.id)}]`,
-                        chalk.magenta(padEnd(x.page, 4)),
-                        chalk.magenta(padEnd(x.count, 4)),
-                        x.status ? x.status : ''
+                        `[歌曲: ${chalk.cyan(x.id)}]`,
+                        `页数: ${chalk.magenta(padEnd(x.page, 4))}`,
+                        `总数: ${chalk.magenta(padEnd(x.count, 4))}`,
+                        statusText ? `状态: ${statusText}` : ''
                     )
                     break
             }
