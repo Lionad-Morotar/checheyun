@@ -39,7 +39,7 @@ function startSongCrawler({
                         lastTime: commentsCon.length === 0 ? 0 : commentsCon[commentsCon.length - 1]._time
                     })
                     .then(({results: comments}) => {
-                        commentsCon.push(...comments)
+                        commentsCon.push(...comments.map(x => utils.washObj(x)))
                         if (comments.length !== 0) {
                             logger.store(id, {
                                 type: 'comment',

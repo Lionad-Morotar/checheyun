@@ -7,14 +7,12 @@ MongoClient.connect("mongodb://localhost:27017", { useNewUrlParser: true, useUni
     const collection = db.collection('原曲')
 
     const list = [
-        // 'https://music.163.com/#/song?id=1399646264',
-        'https://music.163.com/#/song?id=1436709403'
+        'https://music.163.com/#/song?id=1399646264'
     ]
 
     crawler({ 
         collection, 
-        list,
-        force: true
+        list
     })
         .then(() => {
             console.log('task done !')
