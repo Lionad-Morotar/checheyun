@@ -1,29 +1,50 @@
-const CryptoJS = require("crypto-js");
+const crypto = require('crypto')
+const iv = Buffer.from('0102030405060708')
+const presetKey = Buffer.from('0CoJUm6Qyw8W8jud')
+const linuxapiKey = Buffer.from('rFgB&h#%2?^eDg:Q')
+const base62 = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+const publicKey = '-----BEGIN PUBLIC KEY-----\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDgtQn2JZ34ZC28NWYpAUd98iZ37BUrX/aKzmFbt7clFSs6sXqHauqKWqdtLkF2KexO40H1YTX8z2lSgBBOAxLsvaklV8k4cBFK9snQXE9/DDaFt6Rr7iVZMldczhC0JNgTz+SHXT6CBHuX3e9SdB1Ua44oncaTWz7OBGLbCiK45wIDAQAB\n-----END PUBLIC KEY-----'
+const eapiKey = 'e82ckenh8dichen8'
 
-(function() {
-  function b(a, b) {
-    var c = CryptoJS.enc.Utf8.parse(b),
-      d = CryptoJS.enc.Utf8.parse("0102030405060708"),
-      e = CryptoJS.enc.Utf8.parse(a),
-      f = CryptoJS.AES.encrypt(e, c, {
-        iv: d,
-        mode: CryptoJS.mode.CBC
-      });
-    return f.toString();
+const aesEncrypt = (buffer, mode, key, iv) => {
+  const cipher = crypto.createCipheriv('aes-128-' + mode, key, iv)
+  return Buffer.concat([cipher.update(buffer), cipher.final()])
+}
+
+const rsaEncrypt = (buffer, key) => {
+  buffer = Buffer.concat([Buffer.alloc(128 - buffer.length), buffer])
+  return crypto.publicEncrypt({key: key, padding: crypto.constants.RSA_NO_PADDING}, buffer)
+}
+
+const weapi = (object) => {
+  const text = JSON.stringify(object)
+  const secretKey = crypto.randomBytes(16).map(n => (base62.charAt(n % 62).charCodeAt()))
+  return {
+    params: aesEncrypt(Buffer.from(aesEncrypt(Buffer.from(text), 'cbc', presetKey, iv).toString('base64')), 'cbc', secretKey, iv).toString('base64'),
+    encSecKey: rsaEncrypt(secretKey.reverse(), publicKey).toString('hex')
   }
-  function d(d, e, f, g) {
-    var h = {},
-      i = "u3wFl5eFwTWI7dHF",
-      encSecKey =
-        "1eb2800c1605520f6c62e45a3e7eb9a3d331a4f1491618e4c52c029fd29a2b8535dc58708ce099817dd52b4bb1c9b5243f734dd0236849fd0b2c912aa49fab35659cd72d6633850d121b824237b18b3485e2c36cef52a270fb177aa17b2c7a865a836263a6db440eb1e6cd4a6066a0e379715d78b4b1caacaec76f45ce8a4e28";
-    return (
-      (h.encText = b(d, g)),
-      (h.encText = b(h.encText, i)),
-      (h.encSecKey = encSecKey),
-      h
-    );
+}
+
+const linuxapi = (object) => {
+  const text = JSON.stringify(object)
+  return {
+    eparams: aesEncrypt(Buffer.from(text), 'ecb', linuxapiKey, '').toString('hex').toUpperCase()
   }
-  module.exports = {
-    asrsea: d
-  };
-})();
+}
+
+const eapi = (url, object) => {
+  const text = typeof object === 'object' ? JSON.stringify(object) : object;
+  const message = `nobody${url}use${text}md5forencrypt`
+  const digest = crypto.createHash('md5').update(message).digest('hex')
+  const data = `${url}-36cd479b6b5-${text}-36cd479b6b5-${digest}`
+  return {
+    params: aesEncrypt(Buffer.from(data), 'ecb', eapiKey, '').toString('hex').toUpperCase()
+  }
+}
+
+const decrypt = cipherBuffer => {
+  const decipher = crypto.createDecipheriv('aes-128-ecb', eapiKey, '')
+  return Buffer.concat([decipher.update(cipherBuffer), decipher.final()])
+}
+
+module.exports = {weapi, linuxapi, eapi, decrypt}

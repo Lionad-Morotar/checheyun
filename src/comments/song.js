@@ -1,3 +1,4 @@
+const moment = require("moment")
 const musicAPI = require("../../service")
 const utils = require('../../utils')
 const globalConfig = require('./config')
@@ -29,6 +30,7 @@ function startSongCrawler({
         })
 
     function crawl() {
+        const hotCommentsCon = []
         const commentsCon = []
         const task = {
             run () {
@@ -39,8 +41,21 @@ function startSongCrawler({
                         page: curPage++,
                         lastTime: commentsCon.length === 0 ? 0 : commentsCon[commentsCon.length - 1]._time
                     })
-                    .then(({results: comments}) => {
-                        commentsCon.push(...comments.map(x => utils.washObj(x)))
+                    .then(data => {
+                        const comments = data.body.comments || []
+                        const hotComments = data.body.hotComments || []
+                        commentsCon.push(
+                            ...comments
+                                .map(x => utils.washObj(x))
+                                .map(x => {
+                                    x._time = x.time
+                                    x.time = moment(x.time).format("YYYY-MM-DD H:mm:ss")
+                                    return x
+                                })
+                        )
+                        hotCommentsCon.push(
+                            ...hotComments.map(x => utils.washObj(x))
+                        )
                         if (comments.length !== 0) {
                             logger.store(id, {
                                 type: 'comment',
@@ -72,7 +87,7 @@ function startSongCrawler({
                 delete oldone._v
                 collection.deleteMany(oldone, function(err) {
                     if (err) throw err
-                    collection.insertOne({...ID, comments: commentsCon }, function(err) {
+                    collection.insertOne({...ID, hotComments: hotCommentsCon, comments: commentsCon }, function(err) {
                         if (err) throw err
                         callback()
                     })
