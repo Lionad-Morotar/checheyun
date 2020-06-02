@@ -19,17 +19,24 @@ module.exports = {
         Object.values(stores).sort().map(x => {
             if (once && x.logged) return
 
+            const statusColorMap = {
+                success: 'green'
+            }
+            const statusText = x.status && statusColorMap[x.status] && chalk[statusColorMap[x.status]](x.status)
+
             switch(x.type) {
                 case 'comment':
-                    const statusColorMap = {
-                        success: 'green'
-                    }
-                    const statusText = x.status && statusColorMap[x.status] && chalk[statusColorMap[x.status]](x.status)
-
                     console.log(
                         `[歌曲: ${chalk.cyan(x.id)}]`,
                         `页数: ${chalk.magenta(padEnd(x.page, 4))}`,
                         `总数: ${chalk.magenta(padEnd(x.count, 4))}`,
+                        statusText ? `状态: ${statusText}` : ''
+                    )
+                    break
+                case 'album':
+                    console.log(
+                        `[歌单: ${chalk.cyan(x.id)}]`,
+                        `歌曲总数: ${chalk.magenta(padEnd(x.count, 4))}`,
                         statusText ? `状态: ${statusText}` : ''
                     )
                     break

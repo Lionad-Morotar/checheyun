@@ -32,7 +32,7 @@ const chooseUserAgent = ua => {
   return userAgentList[index]
 }
 
-const createRequest = (method, url, data, options) => {
+const createRequest = ({ method = 'POST', url, data, options }) => {
   return new Promise((resolve, reject) => {
     let headers = { 'User-Agent': chooseUserAgent(options.ua) }
     if (method.toUpperCase() === 'POST')

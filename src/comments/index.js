@@ -36,9 +36,20 @@ module.exports = function crawler(arg) {
         !shouldSkip && config.unCrawList.push({ type, url })
     })
 
+    // 剩余可执行并发任务数量
     const canCrawNewLen = _ => Math.min(globalConfig.maxConcurrenceCount - config.crawingList.length, config.unCrawList.length)
     
     return new Promise(resolve => {
+
+        /** 填充任务队列 */
+        function crawlNew() {
+            let i = canCrawNewLen()
+            while (i-- > 0) {
+                const item = config.unCrawList.pop()
+                config.crawingList.push(crawl(item))
+            }
+        }
+
         /* 抓取函数 */
         function crawl(item) {
             const { type, url } = item
@@ -47,8 +58,10 @@ module.exports = function crawler(arg) {
             switch (type) {
                 case 'album':
                     crawler = require('./album')
+                    break
                 case 'song':
                     crawler = require('./song')
+                    break
             }
 
             function deleteFromList() {
@@ -57,13 +70,13 @@ module.exports = function crawler(arg) {
                     1
                 )
             }
-            function crawlNew() {
-                const newItem = config.unCrawList.pop()
-                config.crawingList.push(crawl(newItem))
-            }
-            function checkStop() {
+            const cbpools = []
+            function checkStop(cb) {
+                cbpools.push(cb)
                 if (config.crawingList.length === 0 && config.unCrawList.length === 0) {
-                    resolve()
+                    Promise.all(cbpools)
+                        .then(() => resolve())
+                        .catch(error => { throw error })
                 }
             }
 
@@ -73,9 +86,9 @@ module.exports = function crawler(arg) {
                     type,
                     url,
                     onprogress: () => logger.log(),
-                    callback: () => {
+                    callback: cb => {
                         deleteFromList()
-                        checkStop()
+                        checkStop(cb)
                         setTimeout(() => canCrawNewLen() && crawlNew(), globalConfig.calcPerPageInterval())
                     }
                 })
@@ -87,15 +100,9 @@ module.exports = function crawler(arg) {
         }
         
         /** 填充任务初始队列 */
-        !canCrawNewLen()
-            ? resolve()
-            : (() => {
-                let i = canCrawNewLen()
-                while (i-- > 0) {
-                    const item = config.unCrawList.pop()
-                    config.crawingList.push(crawl(item))
-                }
-            })()
+        canCrawNewLen()
+            ? crawlNew()
+            : resolve()
     })
 }
 

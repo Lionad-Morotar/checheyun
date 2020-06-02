@@ -5,6 +5,7 @@ const globalConfig = require('./config')
 
 function startSongCrawler({
     _config,
+    type,
     url,
     onprogress = _ => _,
     callback,
@@ -14,7 +15,8 @@ function startSongCrawler({
     const { id } = utils.parseURL(url)
     const ID = {
         _id: id,
-        _v: globalConfig.version
+        _v: globalConfig.version[type],
+        type,
     }
 
     // 如果找到数据的数据版本相同则不再更新
@@ -36,7 +38,6 @@ function startSongCrawler({
             run () {
                 musicAPI
                     .getComment({
-                        ...globalConfig.searchConfig,
                         id,
                         page: curPage++,
                         lastTime: commentsCon.length === 0 ? 0 : commentsCon[commentsCon.length - 1]._time
@@ -57,21 +58,19 @@ function startSongCrawler({
                             ...hotComments.map(x => utils.washObj(x))
                         )
                         if (comments.length !== 0) {
-                            logger.store(id, {
+                            onprogress(logger.store(id, {
                                 type: 'comment',
                                 id,
                                 page: curPage - 1,
                                 count: commentsCon.length
-                            })
-                            onprogress()
+                            }))
                             task.continue()
                         } else {
-                            logger.update(id, {
+                            onprogress(logger.update(id, {
                                 id,
                                 status: 'success',
                                 callback: stores => delete stores[id]
-                            })
-                            onprogress()
+                            }))
                             task.stop()
                         }
                     })
