@@ -5,7 +5,7 @@ const validCrawType = ['album', 'song']
 const maxConcurrenceCount = 5
 
 // 获取每页评论的延迟
-const perPageInterval = 2000
+const calcPerPageInterval = _ => ~~(1000 + Math.random() * 2000)
 
 const versionsMap = [
     '0.1', // 抓取测试，使用的是 Music-API-Next 库
@@ -16,7 +16,7 @@ module.exports = {
     validCrawType,
     isValidCrawType: type => validCrawType.includes(type),
     maxConcurrenceCount,
-    perPageInterval,
+    calcPerPageInterval,
 
     searchConfig: {
         vendor: 'netease',

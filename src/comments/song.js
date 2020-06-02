@@ -5,7 +5,8 @@ const globalConfig = require('./config')
 function startSongCrawler({
     _config,
     url,
-    callback
+    onprogress = _ => _,
+    callback,
 }) {
     let curPage = 1
     const { collection, logger, force } = _config
@@ -47,6 +48,7 @@ function startSongCrawler({
                                 page: curPage - 1,
                                 count: commentsCon.length
                             })
+                            onprogress()
                             task.continue()
                         } else {
                             logger.update(id, {
@@ -54,6 +56,7 @@ function startSongCrawler({
                                 status: 'success',
                                 callback: stores => delete stores[id]
                             })
+                            onprogress()
                             task.stop()
                         }
                     })
@@ -62,7 +65,7 @@ function startSongCrawler({
                     })
             },
             continue() {
-                setTimeout(() => task.run(), globalConfig.perPageInterval)
+                setTimeout(() => task.run(), globalConfig.calcPerPageInterval())
             },
             stop() {
                 let oldone = { ...ID }
