@@ -13,7 +13,10 @@ module.exports = {
     update(key, value) {
          Object.assign(stores[key], value, { logged: false })
     },
-    log(config) {
+    log (...args) {
+        console.log(...args)
+    },
+    printNew(config) {
         const { once = true } = config || {}
 
         Object.values(stores).sort().map(x => {
@@ -25,7 +28,7 @@ module.exports = {
             const statusText = x.status && statusColorMap[x.status] && chalk[statusColorMap[x.status]](x.status)
 
             switch(x.type) {
-                case 'comment':
+                case 'song':
                     console.log(
                         `[歌曲: ${chalk.cyan(x.id)}]`,
                         `页数: ${chalk.magenta(padEnd(x.page, 4))}`,

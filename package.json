@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "comments-original-songs": "nodemon .//projects//comments//original-songs//index.js"
+    "comments-original-songs": "cls && nodemon .//projects//comments//original-songs//index.js"
   },
   "dependencies": {
     "chalk": "^4.0.0",

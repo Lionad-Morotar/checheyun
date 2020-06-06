@@ -1,6 +1,7 @@
 const request = require("../utils/request")
 
-class Netease {
+module.exports = {
+
   getComment(query) {
     const data = {
       rid: query.id,
@@ -13,7 +14,8 @@ class Netease {
       data,
       options: { crypto: 'weapi' }
     })
-  }
+  },
+
   getPlayListDetail(query) {
     const data = {
       id: query.id,
@@ -26,6 +28,5 @@ class Netease {
       options: { crypto: 'linuxapi' }
     })
   }
+  
 }
-
-module.exports = new Netease()
