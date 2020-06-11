@@ -52,13 +52,10 @@ class Crawler {
             id: newTaskID,
             task: tasks instanceof Array
                 ? tasks.map(x => formatTask(x))
-                : formatTask(tasks),
-            remains: tasks instanceof Array
-                ? tasks.length
-                : 1
+                : formatTask(tasks)
         }
         this.todoList.push(newTask)
-        return newTask
+        return this
     }
 
     /**
@@ -78,13 +75,6 @@ class Crawler {
     canCreateNewTaskLen(todoList = this.todoList) {
         const doingListEmpty = this.config.maxConcurrenceCount - this.doingList.length
         return Math.min(doingListEmpty, todoList.length)
-
-        // const doingListTaskRemains = this.doingList.reduce((h, x) => h + (x.task.length - 1))
-        // if (doingListTaskRemains > doingListEmpty) {
-        //     return 0
-        // } else {
-        //     return Math.min(doingListEmpty, this.todoList.length)
-        // }
     }
 
     /**
@@ -169,12 +159,13 @@ class Crawler {
      */
     async handleTask (task) {
         const { deep, url } = task
+        const { query } = task.task || {}
         const { id } = utils.parseURL(url)
         const urlType = utils.judgeURLType(url)
         const type = task.type || urlType
         const ID = {
             _id: id,
-            _v: this.config.versionType[urlType],
+            _v: this.config.versionType[urlType] || this.config.versionType[type] || 'default',
             type,
         }
 
@@ -194,6 +185,9 @@ class Crawler {
 
         let projectOpts = null
         switch (type) {
+            case 'song-cover':
+                projectOpts = require('./projects/get-song-cover')({ ID, id, hasFind: findRes[0], query })
+            break
             case 'song':
                 projectOpts = require('./projects/get-song-comments')({ ID, id, hasFind: findRes[0] })
             break

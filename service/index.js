@@ -16,6 +16,19 @@ module.exports = {
     })
   },
 
+  getSongDetail(query) {
+    query.ids = query.ids.split(/\s*,\s*/)
+    const data = {
+      c: '[' + query.ids.map(id => ('{"id":' + id + '}')).join(',') + ']',
+      ids: '[' + query.ids.join(',') + ']'
+    }
+    return request({
+      url: 'https://music.163.com/weapi/v3/song/detail',
+      data,
+      options: { crypto: 'weapi' }
+    })
+  },
+
   getPlayListDetail(query) {
     const data = {
       id: query.id,

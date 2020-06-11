@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "comments-original-songs": "cls && nodemon .//projects//comments//original-songs//index.js"
+    "comments-original-songs": "cls && nodemon .//projects//comments//original-songs//index.js",
+    "mylove": "cls && nodemon .//projects//cover//mylove//index.js"
   },
   "dependencies": {
     "chalk": "^4.0.0",

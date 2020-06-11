@@ -12,6 +12,8 @@ const versionType = {
     song: '1.1', 
     // '0.1' 抓取测试，未登录接口，只保存部分信息；通过 trackIds 获取所有歌曲
     album: '0.1', 
+    // '0.1' 抓取歌曲封面
+    'song-cover': '0.1',
 }
 
 module.exports = {
