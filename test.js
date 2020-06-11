@@ -1,25 +1,40 @@
-const musicAPI = require("music-api-next")
+const fs = require('fs')
+const path = require('path')
+const request = require("request")
+const connectDB = require('./src/connect-db')
 
-musicAPI
-  .getComment({
-    id: "1436709403",
-    page: 1,
-    limit: 100,
-    vendor: 'netease'
-  })
-  .then(comments => console.log(comments, comments.results.length))
-  .catch(error => console.log(error.message));
+const invalidcharRe = /[\.~!@#$%^&*，。；‘’\\{\[\]}|]/g
 
-// var MongoClient = require('mongodb').MongoClient;
-// var url = "mongodb://localhost:27017";
- 
-// MongoClient.connect(url, { useNewUrlParser: true }, function(err, db) {
-//     if (err) throw err;
-//     var dbo = db.db("runoob");
-//     var myobj = { name: "菜鸟教程", url: "www.runoob" };
-//     dbo.collection("site").insertOne(myobj, function(err, res) {
-//         if (err) throw err;
-//         console.log("文档插入成功");
-//         db.close();
-//     });
-// });
+const imgs = []
+
+connectDB().then(mongo => {
+    const db = mongo.db("封面")
+    const collection = db.collection('MyLove')
+
+    collection.find({}).toArray(function(err, res) {
+        if (err) throw err
+        res.map(x => imgs.push({
+          name: x.name.replace(invalidcharRe, ' ').replace(/\s+/g, ' '),
+          src: x.al.picUrl
+        }))
+
+        ;(async function() {
+          for await (let img of imgs) {
+            // console.log(img.name)
+            await new Promise((resolve, reject) => {
+              const writeStream = fs.createWriteStream(path.join(__dirname, './temp/' + img.name + '.jpg'))
+              const readStream = request(img.src)
+              readStream.pipe(writeStream)
+              readStream.on('error', function() {
+                  console.error("错误:" + err) 
+                  reject()
+              })
+              writeStream.on("finish", function() {
+                  writeStream.end()
+                  resolve()
+              })
+            })
+          }
+        })()
+    })
+})
