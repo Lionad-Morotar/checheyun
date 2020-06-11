@@ -172,7 +172,6 @@ connectDB().then(mongo => {
         "https://music.163.com/#/song?id=22822520"
     ]
 
-    // loveSongs.length = 3
     const task = {
         type: 'song-cover',
         task: {

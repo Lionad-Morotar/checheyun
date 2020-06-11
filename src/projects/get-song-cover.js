@@ -7,7 +7,9 @@ module.exports = ({ id, ID, query }) => ({
     query,
     dataHold: {},
     ondata: ({ data, dataHold }) => {
-        dataHold.songs = data.songs.map(song => song.al)
+        dataHold.songs = data.songs.map(song => ({
+            ...song
+        }))
     },
     stop: async ({ collection, dataHold }) => {
         for await (let item of dataHold.songs) {
