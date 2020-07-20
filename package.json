@@ -4,6 +4,7 @@
     "mylove": "cls && nodemon .//projects//cover//mylove//index.js"
   },
   "dependencies": {
+    "agenda": "^3.1.0",
     "chalk": "^4.0.0",
     "crypto-js": "^4.0.0",
     "moment": "^2.26.0",
