@@ -2,9 +2,9 @@ const container = []
 
 function errorHandle() {
     if (container.length === 0) {
-        console.log(new Date(), 'No Error')
+        console.log(new Date(), 'No Error Found (￣▽￣)"')
     } else {
-        console.error(new Date(), 'Has Error')
+        console.error(new Date(), 'Error Founded (+_+)')
     }
 }
 
