@@ -1,8 +1,11 @@
+let times = 0
 const container = []
 
 function errorHandle() {
     if (container.length === 0) {
-        console.log(new Date(), 'No Error Found (￣▽￣)"')
+        if (times++ % 100 === 0) {
+            console.log(new Date(), 'No Error Found (￣▽￣)"')
+        }
     } else {
         console.error(new Date(), 'Error Founded (+_+)')
     }
