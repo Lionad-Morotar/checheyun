@@ -1,13 +1,13 @@
-let times = 0
-const container = []
+const error = require('../src/error')
 
+let times = 0
 function errorHandle() {
-    if (container.length === 0) {
+    if (error.length === 0) {
         if (times++ % 100 === 0) {
-            console.log(new Date(), 'No Error Found (￣▽￣)"')
+            console.log(new Date(), 'No Error Found ~(￣▽￣)~')
         }
     } else {
-        console.error(new Date(), 'Error Founded (+_+)')
+        console.error(new Date(), 'Error Founded ~(+__+)~')
     }
 }
 
