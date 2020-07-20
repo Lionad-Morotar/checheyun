@@ -1,7 +1,8 @@
 {
   "scripts": {
-    "comments-original-songs": "cls && nodemon .//projects//comments//original-songs//index.js",
-    "mylove": "cls && nodemon .//projects//cover//mylove//index.js"
+    "dev": "nodemon .//projects//main//index.js",
+    "comments-original-songs": "nodemon .//projects//comments//original-songs//index.js",
+    "mylove": "nodemon .//projects//cover//mylove//index.js"
   },
   "dependencies": {
     "agenda": "^3.1.0",

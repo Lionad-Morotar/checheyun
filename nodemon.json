@@ -1,0 +1,4 @@
+{
+  "ignore": ["db/**/*"],
+  "exec": "cls && node"
+}
