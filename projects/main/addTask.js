@@ -13,7 +13,7 @@ const options = {
   },
 }
 
-request.post(options, function(error, response, body) {
+request.post(options, function(error, response) {
     if (!error && response.statusCode == 200) {
       console.log('Request Done')
     } else {
