@@ -13,7 +13,6 @@ function errorHandle() {
 
 async function useErrorHandle(agenda) {
     agenda.define('warn exists error', errorHandle)
-
     await agenda.every('10 seconds', 'warn exists error')
 }
 

@@ -2,3 +2,4 @@ node_modules
 db
 test.js
 temp
+secret.js

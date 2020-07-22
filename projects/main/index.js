@@ -6,6 +6,7 @@ const routerWiki = require('./router/wiki')
 
 const { prepareAgenda } = require('./agenda/index')
 const { useErrorHandle } = require('./agenda/error')
+const { runNetease, useRefreshLogin } = require('./netease')
 
 // Init Express Server
 function runServer() {
@@ -23,7 +24,7 @@ function runServer() {
         res.status(404).end()
     })
 
-    const port = process.env.PORT || 3000
+    const port = process.env.PORT || 3001
     const host = process.env.HOST || 'localhost'
 
     app.server = app.listen(port, host, () => {
@@ -34,8 +35,10 @@ function runServer() {
 
 // Program Entry
 async function main() {
+    await runNetease()
     await prepareAgenda([
         useErrorHandle,
+        useRefreshLogin
     ])
     runServer()
 }
