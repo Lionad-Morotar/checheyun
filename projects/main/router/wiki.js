@@ -26,13 +26,13 @@ router.get('/wiki/source', (req, res) => {
             } else {
                 const $ = response.$
                 const content = $('textarea').text()
-                let message = content
+                let data = content
                 if (block) {
                     const regex = new RegExp(`[\\w\\W]*== ${block} ==([\\w\\W]+?)==`)
-                    const match = message.match(regex)
-                    message = match && match[1] || message
+                    const match = data.match(regex)
+                    data = match && match[1] || data
                 }
-                res.json({ status: 200, message })
+                res.json({ status: 200, data })
             }
         }
     })

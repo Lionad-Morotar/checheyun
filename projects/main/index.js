@@ -4,7 +4,9 @@ const chalk = require('chalk')
 
 const routerWiki = require('./router/wiki')
 const routerTask = require('./router/task')
+const taskHandle = require('./task')
 
+const { host, port, serverURL } = require('./config')
 const { prepareAgenda } = require('./agenda/index')
 const { useErrorHandle } = require('./agenda/error')
 const { runNetease, useRefreshLogin } = require('./netease')
@@ -27,23 +29,24 @@ function runServer() {
             res.status(404).end()
         })
 
-        const port = process.env.PORT || 3001
-        const host = process.env.HOST || 'localhost'
-
         app.server = app.listen(port, host, () => {
             resolve()
-            console.log(chalk.green(`Server running @ http://${host}:${port} (Alt+LeftClick to open)`))
+            console.log(chalk.green(`Server running @ ${serverURL} (Alt+LeftClick to open)`))
         })
     })
 } 
 
 // Program Entry
 async function main() {
-    // await runNetease()
-    // await prepareAgenda([
-    //     useErrorHandle,
-    //     useRefreshLogin
-    // ])
+    await runNetease()
+    await prepareAgenda([
+        useErrorHandle,
+        useRefreshLogin
+    ])
     await runServer()
+
+    await taskHandle['create-playlist-from-wiki']({
+        url: 'http://localhost:3001/wiki/source?title=%E6%B7%B1%E7%A7%98%E4%B9%90%E6%9B%B2%E9%9B%86/%E8%A1%A5&block=%E6%A6%82%E8%BF%B0'
+    })
 }
 main()

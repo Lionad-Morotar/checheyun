@@ -1,40 +1,13 @@
-const fs = require('fs')
-const path = require('path')
-const request = require("request")
-const connectDB = require('./src/connect-db')
+const request = require('request')
 
-const invalidcharRe = /[\.~!@#$%^&*，。；‘’\\{\[\]}|]/g
-
-const imgs = []
-
-connectDB().then(mongo => {
-    const db = mongo.db("封面")
-    const collection = db.collection('MyLove')
-
-    collection.find({}).toArray(function(err, res) {
-        if (err) throw err
-        res.map(x => imgs.push({
-          name: x.name.replace(invalidcharRe, ' ').replace(/\s+/g, ' '),
-          src: x.al.picUrl
-        }))
-
-        ;(async function() {
-          for await (let img of imgs) {
-            // console.log(img.name)
-            await new Promise((resolve, reject) => {
-              const writeStream = fs.createWriteStream(path.join(__dirname, './temp/' + img.name + '.jpg'))
-              const readStream = request(img.src)
-              readStream.pipe(writeStream)
-              readStream.on('error', function() {
-                  console.error("错误:" + err) 
-                  reject()
-              })
-              writeStream.on("finish", function() {
-                  writeStream.end()
-                  resolve()
-              })
-            })
-          }
-        })()
-    })
+request.get({
+    url: `http://localhost:3001/wiki/source?title=%E6%B7%B1%E7%A7%98%E4%B9%90%E6%9B%B2%E9%9B%86/%E8%A1%A5&block=%E6%A6%82%E8%BF%B0`
+}, (error, res) => {
+    const data = JSON.parse(res.body)
+    console.log(data.message)
+    if (error || res.statusCode !== 200) {
+        console.error('[Server Failed] GetWIKISource')
+    } else {
+        // resolve(res)
+    }
 })

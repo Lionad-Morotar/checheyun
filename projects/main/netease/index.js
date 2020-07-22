@@ -1,10 +1,7 @@
 const http = require('http')
 
+const { APIURL, joinAPI } = require('../config')
 const { mobile, password } = require('./secret')
-
-/** CONFIG & UTILS */
-const APIURL = `http://localhost:3000`
-const URL = url => APIURL + url
 
 // 检测网易云API项目是否已经启动
 async function detectAPIService() {
@@ -23,7 +20,7 @@ async function detectAPIService() {
 // 登录接口
 async function login() {
     await new Promise(resolve => {
-        http.get(URL(`/login/cellphone?phone=${mobile}&password=${password}`), res => {
+        http.get(joinAPI(`/login/cellphone?phone=${mobile}&password=${password}`), res => {
             const { statusCode } = res
             if (statusCode === 200) {
                 resolve()
@@ -36,7 +33,7 @@ async function login() {
 
 // 定时刷新登录状态
 async function useRefreshLogin (agenda) {
-    agenda.define('refresh login state', () => http.get(URL('/login/refresh')))
+    agenda.define('refresh login state', () => http.get(joinAPI('/login/refresh')))
     await agenda.every('30 minutes', 'refresh login state')
 }
 
