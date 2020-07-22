@@ -1,4 +1,4 @@
 {
-  "ignore": ["db/**/*"],
+  "ignore": ["db/**/*", "addTask.js"],
   "exec": "cls && node"
 }

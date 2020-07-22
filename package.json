@@ -1,6 +1,7 @@
 {
   "scripts": {
     "dev": "nodemon .//projects//main//index.js",
+    "task": "node ./projects/main/addTask.js",
     "comments-original-songs": "nodemon .//projects//comments//original-songs//index.js",
     "mylove": "nodemon .//projects//cover//mylove//index.js"
   },
@@ -12,13 +13,13 @@
     "mongodb": "^3.5.8",
     "pac-proxy-agent": "^4.1.0",
     "querystring": "^0.2.0",
-    "request": "^2.88.2",
     "zlib": "^1.0.5"
   },
   "devDependencies": {
     "body-parser": "^1.19.0",
     "crawler": "^1.2.2",
     "express": "^4.17.1",
+    "request": "^2.88.2",
     "socks5-https-client": "^1.2.1"
   }
 }
