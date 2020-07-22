@@ -9,7 +9,12 @@ fs.readdirSync(__dirname).forEach(file => {
 
     const taskname = file.replace(/\.js$/i, '')
 
-    taskHandle[taskname] = require(path.join(__dirname, file))
+    const rawTaskHandle = require(path.join(__dirname, file))
+    taskHandle[taskname] = async (...args) => {
+        console.log('[TASK-BEGIN]', taskname)
+        await rawTaskHandle(...args)
+        console.log('[TASK-DONE]', taskname)
+    }
 })
 
 module.exports = taskHandle

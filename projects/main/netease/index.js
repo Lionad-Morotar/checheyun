@@ -1,39 +1,38 @@
-const http = require('http')
-
 const { APIURL, joinAPI } = require('../config')
 const { mobile, password } = require('./secret')
 
 // 检测网易云API项目是否已经启动
 async function detectAPIService() {
     return new Promise(resolve => {
-        http.get(APIURL, res => {
-            const { statusCode } = res
-            if (statusCode === 200) {
-                resolve()
-            } else {
-                throw new Error('NeteaseCloudMusicAPI service not found')
-            }
-        })
+        $.axios({ url: APIURL })
+            .then(resolve)
+            .catch(error => {
+                console.log(error)
+                throw new Error('[ERR] NeteaseCloudMusicAPI service not found')
+            })
     })
 }
 
 // 登录接口
 async function login() {
-    await new Promise(resolve => {
-        http.get(joinAPI(`/login/cellphone?phone=${mobile}&password=${password}`), res => {
-            const { statusCode } = res
-            if (statusCode === 200) {
-                resolve()
-            } else {
-                throw new Error('Login failed')
-            }
-        })
+    return await new Promise(resolve => {
+        $.axios({ url: joinAPI(`/login/cellphone?phone=${mobile}&password=${password}`) })
+            .then(resolve)
+            .catch(error => {
+                throw new Error('[ERR] Login failed')
+            }) 
     })
+}
+
+async function getCookie () {
+    const loginData = await login()
+    console.log('===\n', loginData.cookie, '\n===')
+    return loginData.cookie
 }
 
 // 定时刷新登录状态
 async function useRefreshLogin (agenda) {
-    agenda.define('refresh login state', () => http.get(joinAPI('/login/refresh')))
+    agenda.define('refresh login state', () => $.axios.cookie && $.axios.post(joinAPI('/login/refresh')))
     await agenda.every('30 minutes', 'refresh login state')
 }
 
@@ -41,14 +40,14 @@ async function useRefreshLogin (agenda) {
 async function runNetease() {
     try {
         await detectAPIService()
-        await login()
     } catch (err) {
         console.error(err)
-        throw new Error('Netease Service Down')
+        throw new Error('[ERR] Netease Service Down')
     }
 }
 
 module.exports = {
     runNetease,
     useRefreshLogin,
+    getCookie,
 }
