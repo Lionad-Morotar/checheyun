@@ -1,0 +1,37 @@
+{
+    "result": {
+        "albums": [
+            {
+                "name": "深秘的楽曲集·補 東方深秘録初回特典CD",
+                "id": 35297414,
+                "type": "专辑",
+                "size": 7,
+                "picId": 18813743464745970,
+                "blurPicUrl": "http://p4.music.126.net/hO8z6HZpgrmmvZjDBzjqBw==/18813743464745967.jpg",
+                "companyId": 0,
+                "pic": 18813743464745970,
+                "picUrl": "http://p4.music.126.net/hO8z6HZpgrmmvZjDBzjqBw==/18813743464745967.jpg",
+                "publishTime": 1481126400000,
+                "description": "",
+                "tags": "",
+                "company": "SUNFISH",
+                "briefDesc": "",
+                "artist": {},
+                "songs": null,
+                "alias": [],
+                "status": 0,
+                "copyrightId": 0,
+                "commentThreadId": "R_AL_3_35297414",
+                "artists": [],
+                "paid": false,
+                "onSale": false,
+                "picId_str": "18813743464745967",
+                "alg": "alg_search_precision_album_tab_basic",
+                "mark": 0,
+                "containedSong": ""
+            }
+        ],
+        "albumCount": 1
+    },
+    "code": 200
+}
