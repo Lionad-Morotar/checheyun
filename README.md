@@ -9,10 +9,11 @@ WIP（Work in progress） Warning
 
 ## 项目运行
 
-0. 启动 NeteaseAPI 项目
-1. npm run dev，启动车车云主进程
-2. // npm run task-edit，编辑任务
-3. npm run task，添加任务
+1. 启动 NeteaseAPI 项目
+2. 启动车车云数据库
+3. npm run dev，启动车车云主进程
+4. // npm run task-edit，编辑任务
+5. npm run task，添加任务
 
 ## 任务进度
 
