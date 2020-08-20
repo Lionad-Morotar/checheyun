@@ -21,4 +21,4 @@ WIP（Work in progress） Warning
 
 ## 有关车车云
 
-![车车云](https://www.processon.com/embed/5aed65cae4b0a9571016f707)
+![车车云](http://assets.processon.com/chart_image/5aed65cae4b0a9571016f70c.png)
