@@ -165,7 +165,7 @@ class Crawler {
         const type = task.type || urlType
         const ID = {
             _id: id,
-            _v: this.config.versionType[urlType] || this.config.versionType[type] || 'default',
+            _v: this.config.versionType[type] || this.config.versionType[urlType] || 'default',
             type,
         }
 
@@ -184,12 +184,16 @@ class Crawler {
         const hasFind = findRes.length > 0
 
         let projectOpts = null
+        // TODO refactor
         switch (type) {
             case 'song-cover':
                 projectOpts = require('./projects/get-song-cover')({ ID, id, hasFind: findRes[0], query })
             break
             case 'song':
                 projectOpts = require('./projects/get-song-comments')({ ID, id, hasFind: findRes[0] })
+            break
+            case 'song-meta':
+                projectOpts = require('./projects/get-song-meta')({ ID, id, hasFind: findRes[0] })
             break
             case 'album':
                 projectOpts = require('./projects/get-album-songs')({ ID, id, hasFind: findRes[0] })

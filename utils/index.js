@@ -8,9 +8,9 @@ function getQuery(name, url = window.location.href) {
  * 递归删除 Object 中 值为 Null 的键（和 Null 数组元素）
  * @param {Object} obj 
  */
-function washObj(obj) {
+function filterNull(obj) {
   const isObj = x => x instanceof Object && x !== null
-  const washKey = x => isObj(x) ? washObj(x) : x
+  const washKey = x => isObj(x) ? filterNull(x) : x
   return obj instanceof Array
     ? obj.filter(x => x).map(x => washKey(x))
     : (Object.keys(obj).map(k => {
@@ -21,7 +21,7 @@ function washObj(obj) {
 }
 
 module.exports = {
-    washObj,
+    filterNull,
     judgeURLType (url = '') {
         const typeReg = {
             song: url => url.indexOf('https://music.163.com/#/song') !== -1,

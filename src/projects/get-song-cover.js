@@ -1,6 +1,4 @@
-const moment = require("moment")
 const apis = require('../../service')
-const utils = require('../../utils')
 
 module.exports = ({ id, ID, query }) => ({
     api: apis.getSongDetail,

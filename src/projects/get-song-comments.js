@@ -23,7 +23,7 @@ module.exports = ({ id, ID }) => ({
 
         dataHold.comments.push(
             ...comments
-                .map(x => utils.washObj(x))
+                .map(x => utils.filterNull(x))
                 .map(x => {
                     x._time = x.time
                     x.time = moment(x.time).format("YYYY-MM-DD H:mm:ss")
@@ -31,7 +31,7 @@ module.exports = ({ id, ID }) => ({
                 })
         )
         dataHold.hotComments.push(
-            ...hotComments.map(x => utils.washObj(x))
+            ...hotComments.map(x => utils.filterNull(x))
         )
     },
     step: ({ query, data, dataHold }) => {

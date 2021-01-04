@@ -5,7 +5,7 @@ module.exports = ({ id, ID }) => ({
     api: apis.getPlayListDetail,
     query: { id },
     ondata: ({ instance, data, dataHold }) => {
-        Object.assign(dataHold, utils.washObj(data))
+        Object.assign(dataHold, utils.filterNull(data))
         const trackIds = dataHold.playlist && dataHold.playlist.trackIds || []
         instance.addTask(
             trackIds.map(x => ({

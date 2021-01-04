@@ -11,8 +11,16 @@ function getData(args = {}) {
         // logger,
         // collection,
         // callback,
+        
+        // 进度函数
         onprogress: _ => _,
-        dataHold: {}
+        // 数据储存
+        dataHold: {},
+        // 可用此参数找到数据库中同 id 的旧版本信息
+        oldone: args.ID ? (() => {
+            const oldone = { ...args.ID }
+            delete oldone._v
+        })() : null
     }, args)
 
     const api = opts.hasFind
