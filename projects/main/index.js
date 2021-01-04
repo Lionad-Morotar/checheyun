@@ -14,7 +14,7 @@ const { runNetease, useRefreshLogin } = require('./netease')
 
 global.$ = global
 $.axios = axios
-$.axios.cookie = 'MUSIC_U=705353482362c070643e4e54fca22ec84157c7213b481e97245300bca61e48d033a649814e309366; Expires=Thu, 06-Aug-2020 13:20:43 GMT; Path=/;__remember_me=true; Expires=Thu, 06-Aug-2020 13:20:43 GMT; Path=/;__csrf=3631f2a96aac03a23038816df4eecadf; Expires=Thu, 06-Aug-2020 13:20:53 GMT; Path=/'
+$.axios.cookie = require('./cookie')
 $.suspend = utils.suspend
 
 // Init Express Server
