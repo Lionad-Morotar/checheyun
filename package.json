@@ -2,8 +2,8 @@
   "scripts": {
     "dev": "nodemon .//projects//main//index.js",
     "task": "node ./projects/main/addTask.js",
-    "comments-original-songs": "nodemon .//projects//comments//original-songs//index.js",
-    "mylove": "nodemon .//projects//cover//mylove//index.js"
+    "get-comment": "nodemon .//projects//comments//original-songs//index.js",
+    "get-cover": "nodemon .//projects//cover//mylove//index.js"
   },
   "dependencies": {
     "agenda": "^3.1.0",

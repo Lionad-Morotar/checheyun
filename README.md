@@ -2,19 +2,17 @@
 
 WIP（Work in progress） Warning
 
-运行项目，需要作以下准备：
+## 实验性功能
 
-待编辑
-<!-- * 安装 Git、NodeJS、MongoDB -->
+1. 启动开发环境：npm run dev
+2. 启动添加任务模式：npm run task
+3. 抓曲子评论：npm run get-comment
+4. 抓曲子封面：npm run get-comment
 
-## 项目运行
-
-1. 启动 NeteaseAPI 项目
-2. 启动车车云数据库
-3. npm run dev，启动车车云主进程
-4. // npm run task-edit，编辑任务
-5. npm run task，添加任务
-
-## 任务进度
+## 需求进度
 
 任务进度详见：https://github.com/Lionad-Morotar/checheyun/projects/2
+
+## Need Help
+
+TODO
