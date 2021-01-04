@@ -29,11 +29,11 @@ module.exports = {
     })
   },
 
-  getPlayListDetail(query) {
+  getPlayListDetail({ id, s }) {
     const data = {
-      id: query.id,
+      id,
       n: 100000,
-      s: query.s || 8
+      s: s || 8
     }
     return request({
       url: `https://music.163.com/weapi/v3/playlist/detail`, 

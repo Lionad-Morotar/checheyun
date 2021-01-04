@@ -26,7 +26,7 @@ connectDB().then(mongo => {
     const task = 'https://music.163.com/#/playlist?id=2807339852'
 
     new Clawler({ collection })
-        .get(task)
+        .exec(task)
         .then(() => {
             console.log('task done')
         })

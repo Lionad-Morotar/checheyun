@@ -15,11 +15,12 @@ class Crawler {
      */
     constructor (arg) {
         if (!arg.collection) {
-            throw new TypeError('Param collection must be MongoDBCollection')
+            throw new TypeError('Param missing: collection <---> MongoDBCollection')
         }
         this.taskRec = []
         this.todoList = []
         this.doingList = []
+        this.interval = 0
         this.logger = arg.logger || logger
         this.collection = arg.collection
         this.config = Object.assign({
@@ -28,43 +29,41 @@ class Crawler {
         }, globalConfig, arg)
     }
 
-    /**
-     * 调度任务并获取结果
-     * @param {*} tasks 
-     * @param {*} config 
-     */
-    async get (tasks, config = {}) {
+    // 调度任务并获取任务执行的返回结果
+    async exec (tasks, config = {}) {
         Object.assign(this.config, config)
-        this.addTask(tasks)
-        await this.distributeTask()
-        return Promise.resolve()
+        this.addTask(tasks, config.callback, false)
+        return Promise.resolve(await this.distributeTask())
     }
 
-    /**
-     * 添加任务
-     * @param {*} tasks 
-     * @param {*} callback 
-     */
-    addTask (tasks, callback) {
-        const newTaskID = +new Date()
-        const newTask = {
-            callback,
-            id: newTaskID,
-            task: tasks instanceof Array
-                ? tasks.map(x => formatTask(x))
-                : formatTask(tasks)
+    // 添加任务
+    addTask (tasks, callback, isSingleTask = true) {
+        let newTask = []
+        if (!isSingleTask){
+            newTask = tasks.map(x => ({
+                callback,
+                id: String(+new Date())+String(Math.random()).slice(-6),
+                task: formatTask(x)
+            }))
+        } else {
+            newTask = [{
+                callback,
+                id: String(+new Date())+String(Math.random()).slice(-6),
+                task: tasks instanceof Array
+                    ? tasks.map(x => formatTask(x))
+                    : formatTask(tasks)
+            }]
         }
-        this.todoList.push(newTask)
+        this.todoList.push(...newTask)
         return this
     }
 
-    /**
-     * 删除任务
-     * @param {*} task 
-     */
-    async removeTask (taskRec, taskList = this.doingList) {
+    recTask (task, taskList = this.doingList) {
+        taskList.push(task)
+    }
+    removeTask (task, taskList = this.doingList) {
         taskList.splice(
-            taskList.findIndex(x => x === taskRec),
+            taskList.findIndex(x => x === task),
             1
         )
     }
@@ -72,92 +71,41 @@ class Crawler {
     /**
      * 返回剩下的并发数量
      */
-    canCreateNewTaskLen(todoList = this.todoList) {
+    calcRestConcurrenceCount(todoList = this.todoList) {
         const doingListEmpty = this.config.maxConcurrenceCount - this.doingList.length
-        return Math.min(doingListEmpty, todoList.length)
+        return Math.min(doingListEmpty < 0 ? 0 : doingListEmpty, todoList.length)
     }
 
     /**
-     * // 分配任务到待办列表
+     * 开始执行任务，并发控制
      * @param {*} taskList 
      */
     async distributeTask(taskList = this.todoList, doingList = this.doingList) {
-        let i = this.canCreateNewTaskLen()
-        while (i-- > 0) {
-            const task = taskList.pop()
-            doingList.push(task)
-            return await this.execTask(task)
-        }
-    }
-
-    /**
-     * // 执行一项任务
-     * @param {*} taskRec 
-     */
-    async execTask (taskRec) {
-        const { id: taskID, callback: taskCallback, task } = taskRec
-
-        let res
-        if (task instanceof Array) {
-            const results = await this.handleTaskList(task)
-            res = {
-                ...results[0],
-                results: results.map(x => x.result),
-            }
-        } else {
-            res = await this.handleTask(task)
-        }
-        const { result, ...taskOpts } = res
-
-        if (taskCallback) {
-            await taskCallback(taskOpts)
-        }
-        await this.removeTask(taskRec)
-        await this.distributeTask()
-
-        return result
-    }
-
-    /**
-     * 执行系列任务
-     * @param {*} task 
-     */
-    async handleTaskList (task) {
-        const results = []
-        const taskCopy = [...task]
-        const doingList = []
         return new Promise(resolve => {
-            const run = async () => {
-                const task = taskCopy.pop()
-                doingList.push(task)
-                const singleTaskRes = await this.handleTask(task)
-                results.push(singleTaskRes)
-                doingList.splice(
-                    doingList.findIndex(x => x === task), 
-                    1
-                )
-                
-                if (taskCopy.length <= 0) {
-                    resolve(results) 
-                } else {
-                    calcRunLen()
-                }
+            let i = this.calcRestConcurrenceCount()
+            const totalTaskLen = doingList.length + taskList.length
+            const results = []
+            while (i-- > 0) {
+                const task = taskList.pop()
+                const { id: taskID, callback: taskCallback, task: taskDetail } = task
+                this.recTask(task)
+                this.run(taskDetail).then(async res => {
+                    results.push(res)
+                    if (results.length === totalTaskLen) resolve(results)
+                    logger.log(`[RestItem] ${results.length} / ${totalTaskLen}`)
+                    await new Promise(resolve => setTimeout(resolve, this.interval))
+                    this.removeTask(task)
+                    // TODO 继续分发任务
+                })
             }
-            const calcRunLen = () => {
-                let i = Math.min(this.config.maxConcurrenceCount - this.doingList.length + 1 - doingList.length, taskCopy.length)
-                while (i-- > 0) {
-                    run()
-                }
-            }
-            calcRunLen()
         })
     }
-
+    
     /**
-     * 执行单项任务
+     * 执行任务
      * @param {*} task 
      */
-    async handleTask (task) {
+    async run (task) {
         const { deep, url } = task
         const { query } = task.task || {}
         const { id } = utils.parseURL(url)
@@ -181,30 +129,43 @@ class Crawler {
         }[this.config.validType]
 
         const findRes = this.config.force ? [] : (await findFn())
+        // eslint-disable-next-line
         const hasFind = findRes.length > 0
 
         let projectOpts = null
+        const optsInitialValue = { 
+            autoSave: this.config.autoSave,
+            hasFind: findRes[0],
+            id, 
+            ID, 
+        }
         // TODO refactor
         switch (type) {
             case 'song-cover':
                 projectOpts = require('./projects/get-song-cover')({ ID, id, hasFind: findRes[0], query })
             break
             case 'song':
-                projectOpts = require('./projects/get-song-comments')({ ID, id, hasFind: findRes[0] })
-            break
-            case 'song-meta':
-                projectOpts = require('./projects/get-song-meta')({ ID, id, hasFind: findRes[0] })
+                projectOpts = require('./projects/get-song-comments')(optsInitialValue)
             break
             case 'album':
-                projectOpts = require('./projects/get-album-songs')({ ID, id, hasFind: findRes[0] })
+                projectOpts = require('./projects/get-album-songs')(optsInitialValue)
+            break
+            default:
+                try {
+                    projectOpts = require(`./projects/get-${type}`)(optsInitialValue)
+                } catch (error) {
+                    throw new Error('Task type required')
+                }
             break
         }
         
+        // eslint-disable-next-line
         // if (hasFind) {
-        //     logger.log(`[SKIP Fetch: ${chalk.green(id)}] Type: ${chalk.green(type)}`)
+        //     logger.log(`[Use Cashe] type: ${chalk.green(type)} id: ${chalk.green(id)}`)
         // }
 
         const { result, ...taskOpts } = await getData(Object.assign({
+            ID,
             hasFind: findRes[0],
             instance: this,
             config: this.config,
@@ -213,7 +174,7 @@ class Crawler {
             task: { type }
         }, projectOpts))
 
-        return { result, ...taskOpts }
+        return result
     }
     
 }

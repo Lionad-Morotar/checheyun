@@ -11,17 +11,25 @@ function getData(args = {}) {
         // logger,
         // collection,
         // callback,
-        
-        // 进度函数
-        onprogress: _ => _,
-        // 数据储存
-        dataHold: {},
+
         // 可用此参数找到数据库中同 id 的旧版本信息
         oldone: args.ID ? (() => {
             const oldone = { ...args.ID }
             delete oldone._v
-        })() : null
+            return oldone
+        })() : null,
+        // 进度函数
+        onprogress: _ => _,
+        // 数据储存
+        dataHold: {}
     }, args)
+
+    Object.assign(opts, {
+        // 是否在结束时将 dataHold 自动存入数据库
+        autoSave: true,
+        // 仅当 dataHold 不为空时保存
+        saveWhenDataHold: true,
+    }, args.config)
 
     const api = opts.hasFind
         ? _ => new Promise(resolve => resolve({ body: opts.hasFind }))
@@ -34,6 +42,18 @@ function getData(args = {}) {
                 async () => {
                     if (opts.stop) {
                         await opts.stop(opts)
+                    } else if (opts.autoSave) {
+                        if (opts.saveWhenDataHold && Object.keys(opts.dataHold) === 0) return
+                        const { collection, oldone } = opts
+                        await new Promise((resolve, reject) => {
+                            collection.deleteMany(oldone, function(err) {
+                                if (err) reject(err)
+                                collection.insertOne({...opts.oldone, ...opts.dataHold }, function(err) {
+                                    if (err) reject(err)
+                                    resolve()
+                                })
+                            })
+                        })
                     }
                     resolve({
                         ...opts,

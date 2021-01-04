@@ -24,8 +24,9 @@ module.exports = {
     filterNull,
     judgeURLType (url = '') {
         const typeReg = {
-            song: url => url.indexOf('https://music.163.com/#/song') !== -1,
-            album: url => url.indexOf('https://music.163.com/#/playlist') !== -1,
+            song: url => url.indexOf('music.163.com/#/song') !== -1,
+            // album: url => url.indexOf('music.163.com/#/playlist') !== -1,
+            playlist: url => url.indexOf('music.163.com/#/playlist') !== -1
         }
         const findType = Object.keys(typeReg).find(k => typeReg[k](url))
         return findType
