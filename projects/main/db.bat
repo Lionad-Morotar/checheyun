@@ -1,1 +1,0 @@
-mongod --dbpath D:\@Github\cheche-music\projects\main\db

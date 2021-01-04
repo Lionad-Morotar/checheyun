@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "dev": "nodemon .//projects//main//index.js",
+    "dev": "node .//projects//main//open-db.js | nodemon .//projects//main//index.js",
     "task": "node ./projects/main/addTask.js",
     "get-comment": "nodemon .//projects//comments//original-songs//index.js",
     "get-cover": "nodemon .//projects//cover//mylove//index.js"
@@ -8,12 +8,14 @@
   "dependencies": {
     "agenda": "^3.1.0",
     "axios": "^0.19.2",
+    "bluebird": "^3.7.2",
     "chalk": "^4.0.0",
     "cheerio": "^1.0.0-rc.3",
     "crypto-js": "^4.0.0",
     "himalaya": "^1.1.0",
     "moment": "^2.26.0",
     "mongodb": "^3.5.8",
+    "node-cmd": "^4.0.0",
     "pac-proxy-agent": "^4.1.0",
     "querystring": "^0.2.0",
     "zlib": "^1.0.5"
