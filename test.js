@@ -1,6 +1,7 @@
 const Clawler = require('./src')
 const connectDB = require('./src/connect-db')
 const api = require('./service')
+const { ensureCookie } = require('./service/cookie')
 
 function getIDs (items = []) {
     return items.map(x => x.id)
@@ -10,6 +11,12 @@ function getNames (items = []) {
 }
 
 connectDB().then(async mongo => {
+
+    try {
+        await ensureCookie()
+    } catch (error) {
+        console.error(error)
+    }
 
     /* 找到歌单信息 */
 
@@ -50,7 +57,7 @@ connectDB().then(async mongo => {
         }
 
         const sortMethod = 'song-name'
-        const sortByASC = false
+        const sortByASC = true
         const sortFn = sortMethods[sortMethod](sortByASC)
 
         // console.log('[Before Sort]', getNames(songs))
@@ -59,9 +66,9 @@ connectDB().then(async mongo => {
 
         // console.log('[After Sort]', getNames(songs))
 
-        // console.log('[After Sort]', getNames(songs))
-        // console.log('[After Sort]', getIDs(songs))
-        // console.log(playlist.id)
+        console.log('[After Sort]', getNames(songs))
+        console.log('[After Sort]', getIDs(songs))
+        console.log(playlist.id)
 
         /* 上传结果 */
 

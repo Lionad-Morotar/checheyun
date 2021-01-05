@@ -1,0 +1,9 @@
+{
+  "__remember_me": "true",
+  "Max-Age": "315360000",
+  "Expires": "Fri, 3 Jan 2031 14:37:19 GMT",
+  "Path": "/;",
+  "__csrf": "56f42898a788b4c2d5126a569ab00ed4",
+  "MUSIC_U": "705353482362c070643e4e54fca22ec837cd35f388402dee5c85b1c033a2130333a649814e309366",
+  "NMTID": "00O1vfsg991sU6E4kQ0jPD5MBIr2fMAAAF20vsWTw"
+}

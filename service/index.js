@@ -1,5 +1,5 @@
 const request = require("../utils/request")
-const cookie = require('./cookie')
+const { getCookie } = require('./cookie')
 
 module.exports = {
 
@@ -55,7 +55,7 @@ module.exports = {
       options: { 
         crypto: 'weapi',
         url: '/api/playlist/desc/update',
-        cookie
+        cookie: getCookie()
       }
     })
   }
