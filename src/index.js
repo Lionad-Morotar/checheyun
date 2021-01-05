@@ -58,7 +58,7 @@ class Crawler {
         return this
     }
 
-    recTask (task, taskList = this.doingList) {
+    recordTask (task, taskList = this.doingList) {
         taskList.push(task)
     }
     removeTask (task, taskList = this.doingList) {
@@ -81,23 +81,34 @@ class Crawler {
      * @param {*} taskList 
      */
     async distributeTask(taskList = this.todoList, doingList = this.doingList) {
-        return new Promise(resolve => {
-            let i = this.calcRestConcurrenceCount()
+        return new Promise(async resolve => {
             const totalTaskLen = doingList.length + taskList.length
             const results = []
-            while (i-- > 0) {
-                const task = taskList.pop()
-                const { id: taskID, callback: taskCallback, task: taskDetail } = task
-                this.recTask(task)
-                this.run(taskDetail).then(async res => {
-                    results.push(res)
-                    if (results.length === totalTaskLen) resolve(results)
-                    logger.log(`[RestItem] ${results.length} / ${totalTaskLen}`)
-                    await new Promise(resolve => setTimeout(resolve, this.interval))
-                    this.removeTask(task)
-                    // TODO 继续分发任务
+            let doingBinded = null
+            
+            function doing(restConcurrenceCount = this.calcRestConcurrenceCount()) {
+                return new Promise(resolve => {
+                    while (restConcurrenceCount-- > 0) {
+                        const task = taskList.pop()
+                        const { id: taskID, callback: taskCallback, task: taskDetail } = task
+                        this.recordTask(task)
+                        this.run(taskDetail).then(async res => {
+                            results.push(res)
+                            if (results.length === totalTaskLen) resolve(results)
+                            // logger.log(`[RestItem] ${results.length} / ${totalTaskLen}`)
+                            this.removeTask(task)
+
+                            // 继续下一个任务
+                            resolve(await doingBinded())
+                            // 任务间隙休息片刻
+                            await new Promise(resolve => setTimeout(resolve, this.interval))
+                        })
+                    }
                 })
             }
+            doingBinded = doing.bind(this)
+            await doingBinded()
+            resolve(results)
         })
     }
     

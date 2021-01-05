@@ -48,7 +48,7 @@ function getData(args = {}) {
                         await new Promise((resolve, reject) => {
                             collection.deleteMany(oldone, function(err) {
                                 if (err) reject(err)
-                                collection.insertOne({...opts.oldone, ...opts.dataHold }, function(err) {
+                                collection.insertOne({...opts.ID, ...opts.dataHold }, function(err) {
                                     if (err) reject(err)
                                     resolve()
                                 })
@@ -78,7 +78,6 @@ function getData(args = {}) {
 
                         opts.data = data.body
                         opts.ondata(opts)
-
 
                         const doNext = opts.step && opts.step(opts)
                         if (doNext) {

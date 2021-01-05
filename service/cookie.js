@@ -1,6 +1,6 @@
 const config = {
   MUSIC_U: `1e3c825fa822e0963d487d9a1da0b01a35b02604a2d2a074ff362cf95085abdf33a649814e309366`,
-  CSRF: `AiKOa7_2EpWEeg_1teN0488I`
+  CSRF: `9a75a2168f6e59e5961dc0c0fb2fa9c0`
 }
 
 const Expires = `Thu, 12-Jan-2021 18:10:43 GMT`

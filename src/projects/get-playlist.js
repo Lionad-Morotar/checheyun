@@ -4,7 +4,8 @@ module.exports = ({ id, ID, query }) => ({
     api: apis.getPlayListDetail,
     query: { id },
     ondata: ({ data, dataHold }) => {
-        const playlist = data.playlist
-        dataHold.trackIds = playlist.trackIds
+        const isCache = !!data._id
+        const handlePlayList = isCache ? data : data.playlist
+        Object.assign(dataHold, handlePlayList)
     },
 }) 

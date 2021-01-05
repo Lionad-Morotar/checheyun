@@ -14,7 +14,7 @@ const { runNetease, useRefreshLogin } = require('./netease')
 
 global.$ = global
 $.axios = axios
-$.axios.cookie = require('./cookie')
+$.axios.cookie = require('../../service/cookie')
 $.suspend = utils.suspend
 
 // Init Express Server
