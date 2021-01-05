@@ -18,6 +18,7 @@
     "node-cmd": "^4.0.0",
     "pac-proxy-agent": "^4.1.0",
     "querystring": "^0.2.0",
+    "tunnel": "0.0.6",
     "zlib": "^1.0.5"
   },
   "devDependencies": {

@@ -1,21 +1,6 @@
-const config = {
-  MUSIC_U: `1e3c825fa822e0963d487d9a1da0b01a35b02604a2d2a074ff362cf95085abdf33a649814e309366`,
-  CSRF: `9a75a2168f6e59e5961dc0c0fb2fa9c0`
+module.exports = {
+  NMTID: '00OEV8L02OI3QIgGkF5oMpu9Dz_qZsAAAF20r-_Kw',
+  MUSIC_U: '705353482362c070643e4e54fca22ec837cd35f388402deebbbc44b6a74471f933a649814e309366',
+  __csrf: '1ab1b3efd0bb6a8822dd9db288f8122d',
+  __remember_me: 'true'
 }
-
-const Expires = `Thu, 12-Jan-2021 18:10:43 GMT`
-const cookie = [
-  {MUSIC_U: config.MUSIC_U},
-  {Expires},
-  {Path: `/;__remember_me=true`},
-  {Expires},
-  {Path: `/;__csrf=${config.CSRF}`},
-  {Expires},
-  {Path: `/`},
-].reduce((s, c) => {
-  const [k, v] = Object.entries(c)[0]
-  s.push(`${k}=${v}`)
-  return s
-}, []).join('; ')
-
-module.exports = cookie

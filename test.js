@@ -50,7 +50,7 @@ connectDB().then(async mongo => {
         }
 
         const sortMethod = 'song-name'
-        const sortByASC = true
+        const sortByASC = false
         const sortFn = sortMethods[sortMethod](sortByASC)
 
         // console.log('[Before Sort]', getNames(songs))
@@ -68,7 +68,7 @@ connectDB().then(async mongo => {
         // return
         api.updatePlayListSongOrder({
             pid: playlist.id,
-            ids: getIDs(songs)
+            trackIds: getIDs(songs)
         }).then(res => {
             console.log(res)
         }).catch(err => {

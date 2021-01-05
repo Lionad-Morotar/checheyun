@@ -43,16 +43,18 @@ module.exports = {
     })
   },
 
-  updatePlayListSongOrder ({ pid, ids }) {
+  updatePlayListSongOrder ({ pid, trackIds }) {
     const data = {
       pid,
-      ids: '[' + ids.join(',') + ']'
+      trackIds,
+      op: 'update',
     }
     return request({
-      url: `https://music.163.com/api/playlist/order/update`,
+      url: `http://interface.music.163.com/api/playlist/manipulate/tracks`,
       data,
       options: { 
         crypto: 'weapi',
+        url: '/api/playlist/desc/update',
         cookie
       }
     })
