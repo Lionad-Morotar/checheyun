@@ -69,6 +69,7 @@ async function ensureCookie() {
 
   /* 调用接口登录 */
 
+  // 使用命令行的形式，而不是 Github Secret ？
   const phone = '18216493447'
   const password = 'xxx'
   
