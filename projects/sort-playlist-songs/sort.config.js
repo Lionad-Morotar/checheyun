@@ -1,7 +1,7 @@
 module.exports = {
   playlistID: '5447666595',
   sort: [
-    'albumauthor',
+    'albumauthor-has(CLOCKWORKS TRACER)',
     'albumpubtime',
     'albumsongs',
     'name'
@@ -26,6 +26,7 @@ alia：歌曲别名（歌曲别名和翻译名不是一个东西哦）
 time：曲子时长（以秒计）
 author：歌手名（注意，歌曲可能会有多作者，目前仅排序第一作者）
 publishtime：歌曲发布时间（约等于专辑发布日期）
+
 albumname：专辑名
 albumauthor：专辑歌手名（注意事项同歌手名）
 albumpubtime：专辑发布时间
@@ -38,12 +39,16 @@ pop：歌曲热度（不确定具体计算规则，可能和播放量相关）
 
 【排序参数】
 
--asc：正序，按 0-9、A-Z 排序，默认即按此排序
+-asc：正序，按 0-9、A-Z 排序，默认即正序
 -dec：倒序，按 Z-A、9-0 排序
+-has(xxx)：判断是否包含xxx（字符串包含）
+-is(xxx)：判断是否等于xxx（字符串等于）
 
 
 【其它说明】
 
-排序方法可与排序参数任意组合，如 'name-asc', 'name-dec', 'name'，由于不填写排序参数会自动回退到正序排序，所以 'name' 等同于 'name-asc'
+排序方法、高级参数、排序参数可以任意组合，如 'name-asc-has(Lionad)', 'name--has(Lionad)', 'name'
+
+- 不填写排序参数会自动回退到正序排序，所以 'name' 等同于 'name-asc'
 
 */

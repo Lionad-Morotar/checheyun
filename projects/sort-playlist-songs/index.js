@@ -79,11 +79,12 @@ connectDB().then(async mongo => {
         // console.log('[After Sort]', getNames(songs))
         // console.log('[After Sort]', getIDs(songs))
 
+        // console.log('[测试]', songs.map(x => +(+x.al.publishTime / 1000).toFixed(0)))
         console.log('[测试]', songs.map(x => x.name))
 
         /* 上传结果 */
         
-        return
+        // return
         api.updatePlayListSongOrder({
             pid: playlist.id,
             trackIds: getIDs(songs)
