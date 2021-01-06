@@ -1,9 +1,11 @@
 {
   "scripts": {
+    "db": "node .//projects//main//open-db.js",
     "dev": "node .//projects//main//open-db.js | nodemon .//projects//main//index.js",
     "task": "node ./projects/main/addTask.js",
     "get-comment": "nodemon .//projects//comments//original-songs//index.js",
-    "get-cover": "nodemon .//projects//cover//mylove//index.js"
+    "get-cover": "nodemon .//projects//cover//mylove//index.js",
+    "test": "nodemon ./test.js"
   },
   "dependencies": {
     "agenda": "^3.1.0",
@@ -19,6 +21,7 @@
     "pac-proxy-agent": "^4.1.0",
     "querystring": "^0.2.0",
     "tunnel": "0.0.6",
+    "urlencode": "^1.1.0",
     "zlib": "^1.0.5"
   },
   "devDependencies": {

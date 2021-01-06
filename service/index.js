@@ -30,6 +30,16 @@ module.exports = {
     })
   },
 
+  getAlbumContent({ id }) {
+    return request({
+      url: `https://music.163.com/weapi/v1/album/${id}`,
+      data: {},
+      options: {
+        crypto: 'weapi'
+      }
+    })
+  },
+
   getPlayListDetail({ id, s }) {
     const data = {
       id,

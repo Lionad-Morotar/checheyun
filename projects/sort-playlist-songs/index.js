@@ -3,6 +3,8 @@ const connectDB = require('../../src/connect-db')
 const api = require('../../service')
 const { ensureCookie } = require('../../service/cookie')
 
+const isOffLineNow = true
+
 const initSort = require('./sort')
 const sortConfig = require('./sort.config')
 const { playlistID = '' } = sortConfig
@@ -40,15 +42,32 @@ connectDB().then(async mongo => {
         const { trackIds } = playlist
         const songIds = trackIds.map(x => x.id)
 
-        const tasks = songIds.map(x => ({
+        const songsTask = songIds.map(x => ({
             type: 'song-meta',
             url: `https://music.163.com/#/song?id=${x}`
         }))
-        const isOffLineNow = true
         const songs = await new Clawler({ 
             collection: db.collection('单曲-元信息'), 
-            maxConcurrenceCount: isOffLineNow ? 200 : 5 })
-            .exec(tasks)
+            maxConcurrenceCount: isOffLineNow ? 200 : 3 })
+            .exec(songsTask)
+
+        /* 找到所有歌曲的专辑 */
+
+        const albumIDs = [...new Set(songs.map(x => x.al.id))]
+        const albumsTask = albumIDs.map(x => ({
+            type: 'album',
+            url: `https://music.163.com/#/album?id=${x}`
+        }))
+
+        const albums = await new Clawler({ 
+            collection: db.collection('专辑'), 
+            maxConcurrenceCount: isOffLineNow ? 200 : 3 })
+            .exec(albumsTask)
+
+        songs.map(song => {
+            const albumID = song.al.id
+            song.al = albums.find(x => String(x.id) === String(albumID) )
+        })
 
         /* 歌曲排序 */
 
@@ -60,11 +79,11 @@ connectDB().then(async mongo => {
         // console.log('[After Sort]', getNames(songs))
         // console.log('[After Sort]', getIDs(songs))
 
-        // console.log('[测试]', songs.map(x => x.al.name))
+        console.log('[测试]', songs.map(x => x.name))
 
         /* 上传结果 */
         
-        // return
+        return
         api.updatePlayListSongOrder({
             pid: playlist.id,
             trackIds: getIDs(songs)

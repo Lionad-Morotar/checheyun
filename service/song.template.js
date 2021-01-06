@@ -1,7 +1,7 @@
 module.exports = {
   _id: '1311090113',
   _v: '0.1',
-  type: 'song-meta',
+  _type: 'song-meta',
   name: 'ひとり',
   id: 1311090113,
   pst: 0,

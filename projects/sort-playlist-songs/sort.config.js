@@ -1,10 +1,10 @@
 module.exports = {
-  playlistID: '5445763637',
+  playlistID: '5447666595',
   sort: [
-    'alia',
-    'translate',
-    'publishtime',
-    'time'
+    'albumauthor',
+    'albumpubtime',
+    'albumsongs',
+    'name'
   ],
 }
 
@@ -23,10 +23,13 @@ sort：排序方法，可堆叠，优先级从左至右逐渐降低，如 ['albu
 name：歌曲名
 translate：歌曲翻译后名称（比如很多《Cannon》后面会跟一个“卡农”）
 alia：歌曲别名（歌曲别名和翻译名不是一个东西哦）
-albumname：专辑名
 time：曲子时长（以秒计）
 author：歌手名（注意，歌曲可能会有多作者，目前仅排序第一作者）
-publishtime：歌曲发布日期（约等于专辑发布日期）
+publishtime：歌曲发布时间（约等于专辑发布日期）
+albumname：专辑名
+albumauthor：专辑歌手名（注意事项同歌手名）
+albumpubtime：专辑发布时间
+albumsongs：专辑内歌曲顺序
 
 以下是高级排序参数（慎用，因为还没测好）：
 

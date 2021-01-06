@@ -125,7 +125,7 @@ class Crawler {
         const ID = {
             _id: id,
             _v: this.config.versionType[type] || this.config.versionType[urlType] || 'default',
-            type,
+            _type: type,
         }
 
         const findFn = {
@@ -158,12 +158,10 @@ class Crawler {
             case 'song':
                 projectOpts = require('./projects/get-song-comments')(optsInitialValue)
             break
-            case 'album':
-                projectOpts = require('./projects/get-album-songs')(optsInitialValue)
-            break
             default:
                 try {
                     projectOpts = require(`./projects/get-${type}`)(optsInitialValue)
+                    // projectOpts = require('./projects/get-album-songs')(optsInitialValue)
                 } catch (error) {
                     throw new Error('Task type required')
                 }

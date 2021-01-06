@@ -23,6 +23,6 @@ WIP（Work in progress） Warning
 
 ## Need Help
 
-TODO
+* 排序函数的测试文件，即 projects/sort-playlist-songs/sort.test.js
 
 <!-- ![车车云](http://assets.processon.com/chart_image/5aed65cae4b0a9571016f70c.png) -->

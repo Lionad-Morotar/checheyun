@@ -2,27 +2,21 @@
 
 const initSort = require('./sort')
 const sortFn = initSort({
-  // sort: 'name'
-  // sort: 'name-dec'
-  // sort: 'albumname'
-  // sort: 'albumname-dec'
-  // sort: 'pop'
-  // sort: 'pop-dec'
-  sort: ['alia', 'pop-dec', 'albumname', 'name-dec']
+  sort: [
+    'albumname',
+    'albumsongs'
+  ]
 })
 
 const songs = [
-  { name: "Auger", al: { name: 'A' }, alia: null, pop: 88 },
-  { name: "Dhocolate", al: { name: 'A' }, alia: null, pop: 64 },
-  { name: "Chocolate", al: { name: 'B' }, alia: null, pop: 28 },
-  { name: "Burger", al: { name: 'B' }, alia: null, pop: 31 },
-  { name: "ShitA", al: { name: 'D' }, alia: ['c'], pop: 0 },
-  { name: "ShitC", al: { name: 'D' }, alia: ['b'], pop: 0 },
-  { name: "ShitB", al: { name: 'D' }, alia: ['a'], pop: 0 },
-  { name: "ShitA", al: { name: 'B' }, alia: null, pop: 0 },
-  { name: "ShitB", al: { name: 'B' }, alias: null, pop: 0 },
-  { name: "ShitA", al: { name: 'A' }, alias: null, pop: 0 },
-  { name: "ShitB", al: { name: 'A' }, alias: null, pop: 0 },
+  { id: 'B1', name: "B1", al: { name: 'A1', songs: [{ id: 'A1' }, { id: 'B1' }, { id: 'C1' }] } },
+  { id: 'C1', name: "C1", al: { name: 'A1', songs: [{ id: 'A1' }, { id: 'B1' }, { id: 'C1' }] } },
+  { id: 'A1', name: "A1", al: { name: 'A1', songs: [{ id: 'A1' }, { id: 'B1' }, { id: 'C1' }] } },
+
+  { id: 'C2', name: "C2", al: { name: 'A2', songs: [{ id: 'C2' }, { id: 'B2' }, { id: 'A2' }] } },
+  { id: 'B2', name: "B2", al: { name: 'A2', songs: [{ id: 'C2' }, { id: 'B2' }, { id: 'A2' }] } },
+  { id: 'A2', name: "A2", al: { name: 'A2', songs: [{ id: 'C2' }, { id: 'B2' }, { id: 'A2' }] } },
+  { id: 'D2', name: "D2", al: { name: 'A2', songs: [{ id: 'C2' }, { id: 'B2' }, { id: 'A2' }] } },
 ]
 
 songs.sort(sortFn)
