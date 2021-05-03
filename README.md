@@ -20,9 +20,3 @@ WIP（Work in progress） Warning
 ## REMIND
 
 * 数据库的 _v 字段计算方法比较诡异（见 Crawler.handleTask），需要整体重构
-
-## **Need Help**
-
-* （:-(）需要排序函数的完整的测试，即 projects/sort-playlist-songs/sort.test.js
-
-<!-- ![车车云](http://assets.processon.com/chart_image/5aed65cae4b0a9571016f70c.png) -->
