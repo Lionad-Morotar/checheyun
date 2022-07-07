@@ -15,7 +15,7 @@
     "cheerio": "^1.0.0-rc.3",
     "crypto-js": "^4.0.0",
     "himalaya": "^1.1.0",
-    "moment": "^2.26.0",
+    "moment": "^2.29.4",
     "mongodb": "^3.5.8",
     "node-cmd": "^4.0.0",
     "pac-proxy-agent": "^4.1.0",
