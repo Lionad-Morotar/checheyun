@@ -27,7 +27,7 @@
   "devDependencies": {
     "body-parser": "^1.19.0",
     "crawler": "^1.2.2",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "socks5-https-client": "^1.2.1"
   }
 }
